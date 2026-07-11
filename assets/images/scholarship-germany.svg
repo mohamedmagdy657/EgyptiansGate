@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">صورة منحة ألمانيا</title>
+  <desc id="desc">صورة رمزية لعلم ألمانيا.</desc>
+  <rect width="640" height="420" fill="#f0f9ff" rx="36" />
+  <rect x="80" y="90" width="480" height="70" fill="#000" />
+  <rect x="80" y="160" width="480" height="70" fill="#dd0000" />
+  <rect x="80" y="230" width="480" height="70" fill="#ffce00" />
+</svg>

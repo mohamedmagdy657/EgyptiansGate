@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">صورة منحة اليابان</title>
+  <desc id="desc">صورة رمزية لعلم اليابان مع رموز تقنية وتعليمية.</desc>
+  <rect width="640" height="420" fill="#f8fafc" rx="36" />
+  <circle cx="320" cy="210" r="100" fill="#ef4444" />
+  <circle cx="320" cy="210" r="62" fill="#fff" />
+  <rect x="160" y="280" width="320" height="90" rx="24" fill="#e2e8f0" />
+  <path d="M240 300h160v12H240z" fill="#111827" />
+  <path d="M240 330h100v12H240z" fill="#111827" />
+  <path d="M340 180h110v12H340z" fill="#60a5fa" />
+</svg>

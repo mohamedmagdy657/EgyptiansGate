@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="img" aria-labelledby="heroTitle heroDesc">
+  <title id="heroTitle">طلاب يدرسون بالخارج</title>
+  <desc id="heroDesc">رسم تعبيري لطلاب يدرسون مع كتب وخرائط دول.</desc>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1e40af" />
+      <stop offset="100%" stop-color="#60a5fa" />
+    </linearGradient>
+  </defs>
+  <rect width="800" height="520" fill="#f8fafc" rx="40" />
+  <path d="M200 380h400v80H200z" fill="#e2e8f0" />
+  <circle cx="320" cy="260" r="90" fill="url(#grad)" opacity="0.15" />
+  <path d="M120 430q50-120 200-120t200 120" fill="#c7d2fe" />
+  <circle cx="550" cy="220" r="64" fill="#2563eb" opacity="0.18" />
+  <path d="M200 360h120v80H200z" fill="#fff" stroke="#cbd5e1" stroke-width="8" />
+  <path d="M420 350h160v80H420z" fill="#fff" stroke="#cbd5e1" stroke-width="8" />
+  <path d="M270 210h260v120H270z" fill="#fff" stroke="#cbd5e1" stroke-width="8" />
+  <path d="M280 230h120v80H280z" fill="#c7d2fe" />
+  <path d="M440 230h80v50H440z" fill="#93c5fd" />
+  <rect x="310" y="280" width="220" height="22" rx="11" fill="#1e40af" />
+  <rect x="310" y="315" width="180" height="18" rx="9" fill="#2563eb" />
+  <circle cx="190" cy="210" r="38" fill="#fbbf24" />
+  <circle cx="590" cy="150" r="28" fill="#f97316" />
+</svg>

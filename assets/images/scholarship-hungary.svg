@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">صورة منحة المجر</title>
+  <desc id="desc">صورة رمزية لعلم المجر ومبنى جامعة.</desc>
+  <rect width="640" height="420" fill="#f3f4f6" rx="36" />
+  <path d="M70 120h500v60H70z" fill="#cf142b" />
+  <path d="M70 180h500v60H70z" fill="#fff" />
+  <path d="M70 240h500v60H70z" fill="#436f4d" />
+  <rect x="160" y="310" width="320" height="80" rx="24" fill="#fff" opacity="0.9" />
+  <path d="M220 320h200v16H220z" fill="#1f2937" />
+  <path d="M220 355h120v16H220z" fill="#1f2937" />
+</svg>

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة المصريين - Egyptians Gate</title>
+  <meta name="description" content="بوابة المصريين تساعد الطلاب المصريين على استكشاف المنح الدراسية، الجامعات، والدول الدراسية باللغة العربية.">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="index.html">
+  <meta property="og:title" content="بوابة المصريين - Egyptians Gate">
+  <meta property="og:description" content="منصة عربية لمساعدة الطلاب على العثور على منح دراسية ودراسة بالخارج.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/images/placeholder.svg">
+  <meta property="og:url" content="index.html">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="بوابة المصريين - Egyptians Gate">
+  <meta name="twitter:description" content="منصة عربية لمساعدة الطلاب على العثور على منح دراسية ودراسة بالخارج.">
+  <meta name="theme-color" content="#1e3a8a">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/svg+xml" href="assets/images/favicon.svg">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <noscript>
+    <div class="page-section" style="background: rgba(255,255,255,0.96);border-bottom:1px solid var(--border);">
+      <div class="container no-results">
+        <p>تحتاج إلى تفعيل JavaScript لعرض الموقع بشكل صحيح.</p>
+      </div>
+    </div>
+  </noscript>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="#home" class="brand" id="brand-link">
+          <span class="brand-mark">EG</span>
+          <span class="brand-text">بوابة المصريين</span>
+        </a>
+        <button class="menu-toggle" id="mobile-menu-toggle" aria-expanded="false" aria-controls="navbar-menu" aria-label="فتح القائمة">☰</button>
+        <nav class="navbar" id="navbar-menu" aria-label="روابط الموقع">
+          <a href="#home" class="nav-link">الرئيسية</a>
+          <a href="#scholarships" class="nav-link">المنح</a>
+          <a href="#universities" class="nav-link">الجامعات</a>
+          <a href="#countries" class="nav-link">الدول</a>
+          <a href="#articles" class="nav-link">المقالات</a>
+          <a href="#compare" class="nav-link">المقارنة</a>
+          <a href="#about" class="nav-link">عن المنصة</a>
+        </nav>
+        <div class="header-actions">
+          <button id="search-open" class="icon-button" aria-label="فتح البحث">🔍</button>
+          <button id="theme-toggle" class="icon-button" aria-label="تبديل الثيم">🌙</button>
+        </div>
+      </div>
+    </header>
+    <main id="app" class="content" tabindex="-1"></main>
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <div>
+          <p class="footer-title">بوابة المصريين</p>
+          <p class="footer-text">منصة عربية تساعد الطلاب على استكشاف فرص الدراسة بالخارج بشكل واضح ومباشر.</p>
+        </div>
+        <div>
+          <p class="footer-subtitle">روابط سريعة</p>
+          <ul class="footer-links">
+            <li><a href="#scholarships">المنح</a></li>
+            <li><a href="#universities">الجامعات</a></li>
+            <li><a href="#countries">الدول</a></li>
+            <li><a href="#compare">المقارنة</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-subtitle">تابعنا</p>
+          <div class="social-links">
+            <a href="#" aria-label="فيسبوك">فيسبوك</a>
+            <a href="#" aria-label="تويتر">تويتر</a>
+            <a href="#" aria-label="إنستجرام">إنستجرام</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 بوابة المصريين. جميع الحقوق محفوظة.</p>
+      </div>
+    </footer>
+  </div>
+  <div id="search-overlay" class="search-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="search-overlay-title">
+    <div class="search-panel">
+      <div class="search-header">
+        <h2 id="search-overlay-title">بحث الموقع</h2>
+        <button class="icon-button" id="search-close" aria-label="إغلاق البحث">✕</button>
+      </div>
+      <input type="search" id="global-search" class="search-input" placeholder="ابحث عن منح، جامعات، دول، مقالات..." aria-label="بحث الموقع">
+      <div id="search-results" class="search-results"></div>
+    </div>
+  </div>
+  <script src="data.js"></script>
+  <script src="app.js" defer></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js').catch(() => {
+          // Service worker registration failed silently.
+        });
+      });
+    }
+  </script>
+</body>
+</html>

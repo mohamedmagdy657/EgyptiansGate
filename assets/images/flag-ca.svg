@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 480" role="img" aria-label="علم كندا">
+  <rect width="640" height="480" fill="#fff"/>
+  <rect width="160" height="480" x="0" fill="#d52b1e"/>
+  <rect width="160" height="480" x="480" fill="#d52b1e"/>
+  <path d="M320 90 L350 220 L410 220 L360 270 L385 360 L320 310 L255 360 L280 270 L230 220 L290 220 Z" fill="#d52b1e"/>
+</svg>

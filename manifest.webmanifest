@@ -1,0 +1,17 @@
+{
+  "name": "بوابة المصريين",
+  "short_name": "EGate",
+  "description": "منصة عربية لاستكشاف المنح الدراسية والجامعات والدول.",
+  "lang": "ar",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e3a8a",
+  "icons": [
+    {
+      "src": "assets/images/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}

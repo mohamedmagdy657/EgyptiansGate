@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-labelledby="title desc">
+  <title id="title">صورة منحة تركيا</title>
+  <desc id="desc">صورة رمزية لعلم تركيا.</desc>
+  <rect width="640" height="420" fill="#e30613" rx="40" />
+  <circle cx="300" cy="210" r="90" fill="#fff" />
+  <path d="M335 210a50 50 0 1 1-97 17 30 30 0 1 0 57-10 50 50 0 0 1 40-7z" fill="#e30613" />
+  <polygon points="350,165 378,225 320,190 378,155 330,220" fill="#fff" />
+</svg>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 480" role="img" aria-label="About team image">
+  <rect width="1200" height="480" fill="#f8fafc"/>
+  <rect x="80" y="80" width="1040" height="320" rx="36" fill="#2563eb" opacity="0.95"/>
+  <text x="600" y="260" font-family="Cairo, sans-serif" text-anchor="middle" font-size="60" fill="#ffffff">About team</text>
+</svg>
