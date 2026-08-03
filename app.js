@@ -639,47 +639,122 @@ function getCountryOptions() {
   return COUNTRIES.map(country => `<option value="${country.name}">${country.name}</option>`).join('');
 }
 
+function normalizeFilterValue(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function getScholarshipSearchText(item) {
+  return [
+    item.name,
+    item.country,
+    item.degree,
+    item.funding,
+    item.desc,
+    item.deadline,
+    ...(item.requirements || []),
+    ...(item.benefits || []),
+    ...(item.advantages || []),
+    ...(item.disadvantages || []),
+    ...(item.timeline || []),
+    ...(item.documents || []),
+    item.fundingDetails,
+    item.languageReq,
+    item.countryInfo,
+  ].filter(Boolean).join(' ');
+}
+
+function matchesDegreeFilter(item, degreeValue) {
+  if (!degreeValue) {
+    return true;
+  }
+
+  const normalizedSelectedDegree = normalizeFilterValue(degreeValue);
+  const normalizedItemDegree = normalizeFilterValue(item.degree);
+
+  if (normalizedSelectedDegree === 'جميع الدرجات' || normalizedItemDegree === 'جميع الدرجات') {
+    return true;
+  }
+
+  if (normalizedItemDegree === normalizedSelectedDegree) {
+    return true;
+  }
+
+  const degreeAliases = {
+    'بكالوريوس': ['بكالوريوس'],
+    'ماجستير': ['ماجستير', 'ماجستير/دكتوراه'],
+    'دكتوراه': ['دكتوراه', 'ماجستير/دكتوراه'],
+  };
+
+  return (degreeAliases[normalizedSelectedDegree] || []).includes(normalizedItemDegree);
+}
+
+function filterScholarships(items, { query = '', country = '', degree = '' } = {}) {
+  const normalizedQuery = normalizeFilterValue(query);
+  const normalizedCountry = normalizeFilterValue(country);
+
+  return items.filter(item => {
+    const matchesQuery = normalizedQuery === '' || getScholarshipSearchText(item).includes(normalizedQuery);
+    const matchesCountry = normalizedCountry === '' || normalizeFilterValue(item.country) === normalizedCountry;
+    const matchesDegree = matchesDegreeFilter(item, degree);
+
+    return matchesQuery && matchesCountry && matchesDegree;
+  });
+}
+
 function bindPageEvents() {
   const searchInput = document.getElementById('scholarship-search');
   const countrySelect = document.getElementById('filter-country');
   const degreeSelect = document.getElementById('filter-degree');
-  if (searchInput) {
+
+  if (searchInput && !searchInput.dataset.filterBound) {
     searchInput.addEventListener('input', handleScholarshipFilter);
+    searchInput.dataset.filterBound = 'true';
   }
-  if (countrySelect) {
+  if (countrySelect && !countrySelect.dataset.filterBound) {
     countrySelect.addEventListener('change', handleScholarshipFilter);
+    countrySelect.dataset.filterBound = 'true';
   }
-  if (degreeSelect) {
+  if (degreeSelect && !degreeSelect.dataset.filterBound) {
     degreeSelect.addEventListener('change', handleScholarshipFilter);
+    degreeSelect.dataset.filterBound = 'true';
   }
 
   const universitySearch = document.getElementById('university-search');
-  if (universitySearch) {
+  if (universitySearch && !universitySearch.dataset.filterBound) {
     universitySearch.addEventListener('input', handleUniversitySearch);
+    universitySearch.dataset.filterBound = 'true';
   }
 
   const articleSearch = document.getElementById('article-search');
   const articleCat = document.getElementById('article-cat');
-  if (articleSearch) {
+  if (articleSearch && !articleSearch.dataset.filterBound) {
     articleSearch.addEventListener('input', handleArticleFilter);
+    articleSearch.dataset.filterBound = 'true';
   }
-  if (articleCat) {
+  if (articleCat && !articleCat.dataset.filterBound) {
     articleCat.addEventListener('change', handleArticleFilter);
+    articleCat.dataset.filterBound = 'true';
   }
 }
 
 function handleScholarshipFilter() {
-  const query = document.getElementById('scholarship-search')?.value.trim().toLowerCase() || '';
+  const query = document.getElementById('scholarship-search')?.value || '';
   const countryValue = document.getElementById('filter-country')?.value || '';
   const degreeValue = document.getElementById('filter-degree')?.value || '';
-  const results = SCHOLARSHIPS.filter(item => {
-    const matchesQuery = query === '' || item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query) || item.country.toLowerCase().includes(query);
-    const matchesCountry = countryValue === '' || item.country === countryValue;
-    const matchesDegree = degreeValue === '' || item.degree === degreeValue || item.degree === 'جميع الدرجات';
-    return matchesQuery && matchesCountry && matchesDegree;
+  const results = filterScholarships(SCHOLARSHIPS, {
+    query,
+    country: countryValue,
+    degree: degreeValue,
   });
-  document.getElementById('scholarships-grid').innerHTML = results.map(renderScholarshipCard).join('');
-  document.getElementById('no-results').classList.toggle('hidden', results.length > 0);
+
+  const grid = document.getElementById('scholarships-grid');
+  const noResults = document.getElementById('no-results');
+  if (!grid || !noResults) {
+    return;
+  }
+
+  grid.innerHTML = results.map(renderScholarshipCard).join('');
+  noResults.classList.toggle('hidden', results.length > 0);
 }
 
 function handleUniversitySearch() {
