@@ -137,8 +137,8 @@ function renderHomePage() {
       <div class="container hero-inner">
         <div class="hero-copy fade-in">
           <p class="tag">أفضل بوابة للطلاب المصريين</p>
-          <h1 class="hero-title">اكتشف فرص الدراسة بالخارج بثقة</h1>
-          <p class="hero-text">منصة عربية توفر لك معلومات محدثة عن المنح، الجامعات، والدول الدراسية بطريقة سهلة ومباشرة.</p>
+          <h1 class="hero-title">اكتشف فرص الدراسة بالخارج بثقة الآن</h1>
+          <p class="hero-text">أحدث معلومات المنح والجامعات مع تحديث مباشر على المنصة، والآن التغيير ظاهر بوضوح.</p>
           <div class="hero-actions">
             <a class="primary-button" href="#scholarships">المنح</a>
             <a class="secondary-button" href="#articles">المقالات</a>
