@@ -10,6 +10,17 @@
   --accent: #ca8a04;
   --border: #e2e8f0;
   --shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
+  --on-primary: #ffffff;
+  --tag-bg: #e2e8f0;
+  --tag-color: var(--muted);
+  --badge-bg: var(--primary-soft);
+  --badge-color: var(--primary);
+  --header-bg: rgba(255, 255, 255, 0.94);
+  --overlay-bg: rgba(15, 23, 42, 0.75);
+  --input-bg: var(--surface);
+  --input-text: var(--text);
+  --placeholder: #94a3b8;
+  --primary-rgb: 30,64,175;
 }
 
 .dark {
@@ -23,6 +34,17 @@
   --accent: #fbbf24;
   --border: #334155;
   --shadow: 0 24px 64px rgba(15, 23, 42, 0.32);
+  --on-primary: #ffffff;
+  --tag-bg: #1f2937;
+  --tag-color: var(--muted);
+  --badge-bg: rgba(96,165,250,0.12);
+  --badge-color: var(--on-primary);
+  --header-bg: rgba(15, 23, 42, 0.96);
+  --overlay-bg: rgba(0, 0, 0, 0.75);
+  --input-bg: #111827;
+  --input-text: #f8fafc;
+  --placeholder: #94a3b8;
+  --primary-rgb: 96,165,250;
 }
 
 * {
@@ -68,13 +90,13 @@ img {
   position: sticky;
   top: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.94);
+  background: var(--header-bg);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border);
 }
 
 .dark .site-header {
-  background: rgba(15, 23, 42, 0.96);
+  background: var(--header-bg);
 }
 
 .header-inner {
@@ -101,7 +123,7 @@ img {
   justify-content: center;
   border-radius: 0.85rem;
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
   font-weight: 700;
 }
 
@@ -200,7 +222,7 @@ img {
 
 .primary-button {
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
 }
 
 .secondary-button {
@@ -279,7 +301,7 @@ img {
   padding: 0.55rem 0.85rem;
   border-radius: 999px;
   background: var(--primary-soft);
-  color: var(--primary);
+  color: var(--badge-color);
   font-size: 0.78rem;
 }
 
@@ -287,8 +309,8 @@ img {
   display: inline-flex;
   padding: 0.45rem 0.75rem;
   border-radius: 999px;
-  background: #e2e8f0;
-  color: var(--muted);
+  background: var(--tag-bg);
+  color: var(--tag-color);
 }
 
 .card-actions {
@@ -303,11 +325,17 @@ img {
   padding: 0.75rem 1rem;
   border-radius: 1rem;
   font-size: 0.85rem;
+  color: var(--text);
 }
 
 .outline-button-sm {
   background: transparent;
   border: 1px solid var(--border);
+}
+
+.dark .nav-link.active,
+.dark .nav-link:hover {
+  color: var(--text);
 }
 
 .section-title {
@@ -402,8 +430,8 @@ img {
   padding: 1rem;
   border-radius: 1rem;
   border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
+  background: var(--input-bg);
+  color: var(--input-text);
 }
 
 .input-field:focus,
@@ -534,7 +562,7 @@ img {
 .search-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(15, 23, 42, 0.75);
+  background: var(--overlay-bg);
   display: grid;
   place-items: center;
   padding: 1rem;
@@ -568,6 +596,8 @@ img {
   border-radius: 1.25rem;
   padding: 1rem;
   background: var(--surface);
+  color: var(--text);
+  color: var(--text);
   text-align: right;
 }
 

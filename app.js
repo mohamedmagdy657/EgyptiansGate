@@ -192,23 +192,13 @@ function renderScholarshipsPage() {
         <div class="full-width-card">
           <div class="filter-row">
             <input id="scholarship-search" type="search" class="search-input" placeholder="ابحث عن منحة..." aria-label="بحث في المنح">
-            <select id="filter-country" class="select-field" aria-label="فلترة حسب الدولة">
-              <option value="">كل الدول</option>
-              ${getCountryOptions()}
-            </select>
-            <select id="filter-degree" class="select-field" aria-label="فلترة حسب الدرجة">
-              <option value="">كل الدرجات</option>
-              <option value="بكالوريوس">بكالوريوس</option>
-              <option value="ماجستير">ماجستير</option>
-              <option value="دكتوراه">دكتوراه</option>
-              <option value="جميع الدرجات">جميع الدرجات</option>
-            </select>
+            <button id="clear-scholarship-search" class="outline-button-sm" type="button">مسح البحث</button>
           </div>
         </div>
         <div id="scholarships-grid" class="card-grid">${SCHOLARSHIPS.map(renderScholarshipCard).join('')}</div>
         <div id="no-results" class="no-results hidden">
           <p>No scholarships found.</p>
-          <div style="margin-top:1rem;"><button class="outline-button-sm" type="button" onclick="clearScholarshipFilters()">Clear Filters</button></div>
+          <div style="margin-top:1rem;"><button class="outline-button-sm" type="button" onclick="clearScholarshipFilters()">مسح البحث</button></div>
         </div>
       </div>
     </section>
@@ -639,10 +629,6 @@ function renderFeatureCard(title, text) {
   `;
 }
 
-function getCountryOptions() {
-  return COUNTRIES.map(country => `<option value="${country.name}">${country.name}</option>`).join('');
-}
-
 function normalizeFilterValue(value) {
   return String(value || '')
     .replace(/\u00A0/g, ' ')
@@ -652,7 +638,6 @@ function normalizeFilterValue(value) {
 }
 
 function getScholarshipSearchText(item) {
-  // Return a normalized searchable string (lowercased, trimmed, single spaces)
   const joined = [
     item.name,
     item.country,
@@ -660,6 +645,8 @@ function getScholarshipSearchText(item) {
     item.funding,
     item.desc,
     item.deadline,
+    ...(item.programs || []),
+    ...(item.keywords || []),
     ...(item.requirements || []),
     ...(item.benefits || []),
     ...(item.advantages || []),
@@ -674,60 +661,26 @@ function getScholarshipSearchText(item) {
   return normalizeFilterValue(joined);
 }
 
-function matchesDegreeFilter(item, degreeValue) {
-  if (!degreeValue) {
-    return true;
-  }
-
-  const normalizedSelectedDegree = normalizeFilterValue(degreeValue);
-  const normalizedItemDegree = normalizeFilterValue(item.degree);
-
-  if (normalizedSelectedDegree === 'جميع الدرجات' || normalizedItemDegree === 'جميع الدرجات') {
-    return true;
-  }
-
-  if (normalizedItemDegree === normalizedSelectedDegree) {
-    return true;
-  }
-
-  const degreeAliases = {
-    'بكالوريوس': ['بكالوريوس'],
-    'ماجستير': ['ماجستير', 'ماجستير/دكتوراه'],
-    'دكتوراه': ['دكتوراه', 'ماجستير/دكتوراه'],
-  };
-
-  return (degreeAliases[normalizedSelectedDegree] || []).includes(normalizedItemDegree);
-}
-
-function filterScholarships(items, { query = '', country = '', degree = '' } = {}) {
+function filterScholarships(items, query = '') {
   const normalizedQuery = normalizeFilterValue(query);
-  const normalizedCountry = normalizeFilterValue(country);
 
   return items.filter(item => {
-    const matchesQuery = normalizedQuery === '' || getScholarshipSearchText(item).includes(normalizedQuery);
-    const matchesCountry = normalizedCountry === '' || normalizeFilterValue(item.country) === normalizedCountry;
-    const matchesDegree = matchesDegreeFilter(item, degree);
-
-    return matchesQuery && matchesCountry && matchesDegree;
+    return normalizedQuery === '' || getScholarshipSearchText(item).includes(normalizedQuery);
   });
 }
 
 function bindPageEvents() {
   const searchInput = document.getElementById('scholarship-search');
-  const countrySelect = document.getElementById('filter-country');
-  const degreeSelect = document.getElementById('filter-degree');
+  const clearSearchButton = document.getElementById('clear-scholarship-search');
 
   if (searchInput && !searchInput.dataset.filterBound) {
     searchInput.addEventListener('input', handleScholarshipFilter);
     searchInput.dataset.filterBound = 'true';
   }
-  if (countrySelect && !countrySelect.dataset.filterBound) {
-    countrySelect.addEventListener('change', handleScholarshipFilter);
-    countrySelect.dataset.filterBound = 'true';
-  }
-  if (degreeSelect && !degreeSelect.dataset.filterBound) {
-    degreeSelect.addEventListener('change', handleScholarshipFilter);
-    degreeSelect.dataset.filterBound = 'true';
+
+  if (clearSearchButton && !clearSearchButton.dataset.filterBound) {
+    clearSearchButton.addEventListener('click', clearScholarshipFilters);
+    clearSearchButton.dataset.filterBound = 'true';
   }
 
   const universitySearch = document.getElementById('university-search');
@@ -750,13 +703,7 @@ function bindPageEvents() {
 
 function handleScholarshipFilter() {
   const query = document.getElementById('scholarship-search')?.value || '';
-  const countryValue = document.getElementById('filter-country')?.value || '';
-  const degreeValue = document.getElementById('filter-degree')?.value || '';
-  const results = filterScholarships(SCHOLARSHIPS, {
-    query,
-    country: countryValue,
-    degree: degreeValue,
-  });
+  const results = filterScholarships(SCHOLARSHIPS, query);
 
   const grid = document.getElementById('scholarships-grid');
   const noResults = document.getElementById('no-results');
@@ -764,7 +711,6 @@ function handleScholarshipFilter() {
     return;
   }
 
-  // Render grid results
   try {
     grid.innerHTML = results.map(renderScholarshipCard).join('');
   } catch (err) {
@@ -781,11 +727,7 @@ function handleScholarshipFilter() {
 
 function clearScholarshipFilters() {
   const searchInput = document.getElementById('scholarship-search');
-  const countrySelect = document.getElementById('filter-country');
-  const degreeSelect = document.getElementById('filter-degree');
   if (searchInput) searchInput.value = '';
-  if (countrySelect) countrySelect.value = '';
-  if (degreeSelect) degreeSelect.value = '';
   handleScholarshipFilter();
 }
 
