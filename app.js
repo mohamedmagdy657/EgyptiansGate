@@ -180,6 +180,7 @@ function renderHomePage() {
 }
 
 function renderScholarshipsPage() {
+  console.log('Render scholarships page — total scholarships loaded:', SCHOLARSHIPS.length);
   return `
     <section class="page-section">
       <div class="container">
@@ -745,6 +746,7 @@ function handleScholarshipFilter() {
   const query = document.getElementById('scholarship-search')?.value || '';
   const countryValue = document.getElementById('filter-country')?.value || '';
   const degreeValue = document.getElementById('filter-degree')?.value || '';
+  console.log('Filtering — selected country:', JSON.stringify(countryValue), 'selected degree:', JSON.stringify(degreeValue), 'search query:', JSON.stringify(query));
   const results = filterScholarships(SCHOLARSHIPS, {
     query,
     country: countryValue,
@@ -766,8 +768,10 @@ function handleScholarshipFilter() {
   }
 
   if (results.length > 0) {
+    console.log('Filtering result count:', results.length, 'first item:', results[0]);
     noResults.classList.add('hidden');
   } else {
+    console.log('Filtering result count: 0 — no matches');
     noResults.classList.remove('hidden');
   }
 }
