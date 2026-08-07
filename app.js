@@ -206,7 +206,10 @@ function renderScholarshipsPage() {
           </div>
         </div>
         <div id="scholarships-grid" class="card-grid">${SCHOLARSHIPS.map(renderScholarshipCard).join('')}</div>
-        <div id="no-results" class="no-results hidden">لا توجد نتائج مطابقة</div>
+        <div id="no-results" class="no-results hidden">
+          <p>No scholarships match your current filters.</p>
+          <div style="margin-top:1rem;"><button class="outline-button-sm" type="button" onclick="clearScholarshipFilters()">Clear Filters</button></div>
+        </div>
       </div>
     </section>
   `;
@@ -754,8 +757,29 @@ function handleScholarshipFilter() {
     return;
   }
 
-  grid.innerHTML = results.map(renderScholarshipCard).join('');
-  noResults.classList.toggle('hidden', results.length > 0);
+  // Render grid results
+  try {
+    grid.innerHTML = results.map(renderScholarshipCard).join('');
+  } catch (err) {
+    console.error('Error rendering scholarship cards', err);
+    grid.innerHTML = '';
+  }
+
+  if (results.length > 0) {
+    noResults.classList.add('hidden');
+  } else {
+    noResults.classList.remove('hidden');
+  }
+}
+
+function clearScholarshipFilters() {
+  const searchInput = document.getElementById('scholarship-search');
+  const countrySelect = document.getElementById('filter-country');
+  const degreeSelect = document.getElementById('filter-degree');
+  if (searchInput) searchInput.value = '';
+  if (countrySelect) countrySelect.value = '';
+  if (degreeSelect) degreeSelect.value = '';
+  handleScholarshipFilter();
 }
 
 function handleUniversitySearch() {
