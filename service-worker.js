@@ -1,4 +1,4 @@
-const CACHE_NAME = 'egate-v5';
+const CACHE_NAME = 'egate-v6';
 const ASSETS = [
   'index.html',
   'styles.css',

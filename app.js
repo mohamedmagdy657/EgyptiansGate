@@ -180,7 +180,6 @@ function renderHomePage() {
 }
 
 function renderScholarshipsPage() {
-  console.log('Render scholarships page — total scholarships loaded:', SCHOLARSHIPS.length);
   return `
     <section class="page-section">
       <div class="container">
@@ -208,7 +207,7 @@ function renderScholarshipsPage() {
         </div>
         <div id="scholarships-grid" class="card-grid">${SCHOLARSHIPS.map(renderScholarshipCard).join('')}</div>
         <div id="no-results" class="no-results hidden">
-          <p>No scholarships match your current filters.</p>
+          <p>No scholarships found.</p>
           <div style="margin-top:1rem;"><button class="outline-button-sm" type="button" onclick="clearScholarshipFilters()">Clear Filters</button></div>
         </div>
       </div>
@@ -645,11 +644,16 @@ function getCountryOptions() {
 }
 
 function normalizeFilterValue(value) {
-  return String(value || '').trim().toLowerCase();
+  return String(value || '')
+    .replace(/\u00A0/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .toLowerCase();
 }
 
 function getScholarshipSearchText(item) {
-  return [
+  // Return a normalized searchable string (lowercased, trimmed, single spaces)
+  const joined = [
     item.name,
     item.country,
     item.degree,
@@ -666,6 +670,8 @@ function getScholarshipSearchText(item) {
     item.languageReq,
     item.countryInfo,
   ].filter(Boolean).join(' ');
+
+  return normalizeFilterValue(joined);
 }
 
 function matchesDegreeFilter(item, degreeValue) {
@@ -746,7 +752,6 @@ function handleScholarshipFilter() {
   const query = document.getElementById('scholarship-search')?.value || '';
   const countryValue = document.getElementById('filter-country')?.value || '';
   const degreeValue = document.getElementById('filter-degree')?.value || '';
-  console.log('Filtering — selected country:', JSON.stringify(countryValue), 'selected degree:', JSON.stringify(degreeValue), 'search query:', JSON.stringify(query));
   const results = filterScholarships(SCHOLARSHIPS, {
     query,
     country: countryValue,
@@ -768,10 +773,8 @@ function handleScholarshipFilter() {
   }
 
   if (results.length > 0) {
-    console.log('Filtering result count:', results.length, 'first item:', results[0]);
     noResults.classList.add('hidden');
   } else {
-    console.log('Filtering result count: 0 — no matches');
     noResults.classList.remove('hidden');
   }
 }
