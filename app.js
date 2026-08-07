@@ -284,6 +284,7 @@ function renderScholarshipDetailPage(id) {
             <button class="primary-button" type="button" onclick="toggleSaveScholarship(${scholarship.id})">${state.savedScholarships.includes(scholarship.id) ? '✓ محفوظ' : 'حفظ المنحة'}</button>
             <button class="outline-button-sm" type="button" onclick="toggleCompare('scholarships', ${scholarship.id})">إضافة للمقارنة</button>
           </div>
+          ${scholarship.detailsHtml || ''}
           <div style="margin-top:1.5rem;">
             <h3>منح ذات صلة</h3>
             <div class="card-grid">${related.map(renderScholarshipCard).join('')}</div>
