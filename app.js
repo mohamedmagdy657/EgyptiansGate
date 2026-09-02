@@ -52,12 +52,19 @@ function clearStaleDeploymentCaches() {
 window.addEventListener('load', clearStaleDeploymentCaches);
 
 const SECTION_IMAGES = {
-  home: 'assets/images/hero-image.svg',
+  home: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
   scholarships: 'assets/images/section-scholarships.svg',
-  universities: 'assets/images/section-universities.svg',
-  countries: 'assets/images/section-countries.svg',
+  universities: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80',
+  countries: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1200&q=80',
   articles: 'assets/images/section-articles.svg',
   about: 'assets/images/section-about.svg',
+};
+
+const SCHOLARSHIP_DETAIL_IMAGES = {
+  1: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80',
+  2: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1200&q=80',
+  3: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
+  4: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c8e?auto=format&fit=crop&w=1200&q=80',
 };
 
 const dom = {
@@ -187,7 +194,9 @@ function renderHomePage() {
             <a class="secondary-button" href="#articles">المقالات</a>
           </div>
         </div>
-        <div class="hero-visual fade-in"></div>
+        <div class="hero-visual fade-in">
+          <img src="${SECTION_IMAGES.home}" alt="طلاب داخل بيئة تعليمية حقيقية" loading="eager" />
+        </div>
       </div>
     </section>
     <section class="page-section">
@@ -288,11 +297,17 @@ function renderScholarshipDetailPage(id) {
     return renderNotFound('لم يتم العثور على هذه المنحة');
   }
   const related = SCHOLARSHIPS.filter(item => item.id !== scholarship.id).slice(0, 3);
+  const detailImage = SCHOLARSHIP_DETAIL_IMAGES[scholarship.id];
   return `
     <section class="page-section">
       <div class="container">
         <a class="secondary-button" href="#scholarships">← العودة إلى المنح</a>
         <div class="full-width-card">
+          ${detailImage ? `
+            <div class="detail-hero-media" style="margin-bottom: 1.5rem;">
+              <img src="${detailImage}" alt="صورة مرتبطة بمنحة ${scholarship.name}" loading="lazy" />
+            </div>
+          ` : ''}
           <div class="page-heading" style="margin-bottom: 1.5rem;">
             <div>
               <h2 class="section-title">${scholarship.name}</h2>
@@ -561,26 +576,52 @@ function renderAboutPage() {
         <div class="page-heading">
           <div>
             <h2 class="section-title">عن المنصة</h2>
-            <p class="section-description">بوابة المصريين منصّة عربية تهدف إلى مساعدة الطلاب في البحث عن فرص الدراسة بالخارج.</p>
+            <p class="section-description">مشروع يهدف إلى تسهيل اكتشاف فرص الدراسة بالخارج للطلاب المصريين بطريقة أوضح وأبسط.</p>
           </div>
         </div>
-        <div class="grid-2">
-          <div>
-            <p>تهدف المنصة إلى تقديم معلومات واضحة ومبسطة عن المنح والجامعات والدول، مع تجربة تصفح مريحة للمستخدمين باللغة العربية.</p>
-          </div>
+
+        <div class="grid-2" style="align-items: stretch;">
           <div class="full-width-card">
-            <h3>ما نقدمه</h3>
-            <ul class="highlight-list">
-              <li>معلومات منظمة عن الفرص التعليمية.</li>
-              <li>أدوات مقارنة سهلة الاستخدام.</li>
-              <li>محتوى مصمم لطلاب اللغة العربية.</li>
-            </ul>
+            <p class="tag">ما هي بوابة المصريين؟</p>
+            <h3 style="margin-top: 0.75rem;">منصة بسيطة تساعد الطالب على فهم المنح وفهم الفرص المتاحة.</h3>
+            <p>بوابة المصريين هو مشروع يهدف إلى مساعدة الطلاب المصريين في اكتشاف المنح الدراسية والفرص التعليمية الدولية بشكل أكثر تنظيمًا وسهولة. الفكرة بسيطة: جمع المعلومات في مكان واحد، وتسهيل فهمها بدلًا من التشتت بين مواقع كثيرة ومصادر مختلفة.</p>
+            <p>الهدف ليس الوعود أو الترويج، بل تقديم معلومات واضحة وسهلة القراءة، بحيث يكون البحث عن الفرص أقل إرهاقًا وأقرب إلى الواقع العملي للطالب.</p>
+          </div>
+
+          <div class="full-width-card">
+            <p class="tag">لماذا تم إنشاء المنصة؟</p>
+            <h3 style="margin-top: 0.75rem;">لأن البحث عن المنح غالبًا يكون مربكًا.</h3>
+            <p>غالبًا ما تكون المعلومات منتشرة على أكثر من موقع، وبعض الشروط تبدو معقدة، وبعض الفرص لا تُعرف إلا بعد البحث الطويل. هذا المشروع بدأ من فكرة بسيطة: أن يكون هناك مكان يساعد الطالب على رؤية ما هو موجود، وما الذي يهمه، وكيف يقرأ الفرصة بشكل أوضح.</p>
+            <p>المنصة تم تصميمها لتجعل العملية أكثر تنظيمًا، وأكثر واقعية، وبدون تعقيد غير ضروري.</p>
           </div>
         </div>
+
         <div class="support-grid" style="margin-top:1.5rem;">
-          ${renderInfoCard('معلومات دقيقة', 'محتوى يعتمد على مصادر موثوقة ويقدم بطريقة بسيطة.' )}
-          ${renderInfoCard('دعم المقارنة', 'قارن بين الخيارات المهمة لتسهيل قرارك الدراسي.')}
-          ${renderInfoCard('تجربة عربية', 'واجهة وتصميم يتماشى مع قراءة اللغة العربية من اليمين إلى اليسار.')}
+          ${renderInfoCard('استكشاف المنح', 'تصفح فرص دراسية متنوعة في مكان واحد مع معلومات أساسية واضحة.')} 
+          ${renderInfoCard('البحث السريع', 'ابحث عن المنحة المناسبة حسب الاسم أو الدولة أو نوع الدراسة أو الكلمات المرتبطة بها.')} 
+          ${renderInfoCard('المقارنة والحفظ', 'قارن بين الفرص المختلفة، واحفظ المنح التي تهمك للعودة إليها لاحقًا.')} 
+        </div>
+
+        <div class="full-width-card" style="margin-top:1.5rem;">
+          <div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:1rem;">
+            <div style="flex:1 1 18rem;">
+              <p class="tag">من وراء المنصة</p>
+              <h3 style="margin-top:0.75rem;">تم تطويرها بواسطة محمد مجدي</h3>
+              <p>محمد مجدي / Mohamed Magdy</p>
+              <p>تم إنشاء بوابة المصريين كـ مشروع شخصي يهدف إلى تسهيل وصول الطلاب المصريين إلى معلومات منسقة وواضحة حول المنح والفرص التعليمية، بطريقة أكثر فاعلية وسهولة في المتابعة.</p>
+            </div>
+            <div style="min-width: 9rem; padding: 1rem 1.25rem; border-radius: 1rem; border: 1px solid var(--border); background: rgba(37,99,235,0.04); text-align:center; font-weight:700; color: var(--text);">
+              <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 0.4rem;">Created by</div>
+              <div style="font-size: 1.2rem;">محمد مجدي</div>
+              <div style="font-size: 0.78rem; opacity: 0.75; margin-top: 0.25rem;">Mohamed Magdy</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="full-width-card" style="margin-top:1.5rem;">
+          <p class="tag">رسالة قصيرة</p>
+          <h3 style="margin-top:0.75rem;">الفرص لا تظهر دائمًا بوضوح في البداية، لكن الوصول إلى معلومات واضحة هو أول خطوة مهمة.</h3>
+          <p>في كثير من الأحيان يكون التحدي الأكبر هو معرفة وجود الفرصة نفسها، وليس فقط كيفية التقديم. لذلك فهدف المنصة هو جعل هذه المعلومات أسهل للوصول إليها، وأكثر وضوحًا للطالب الذي يريد أن يبدأ رحلته في اتجاه صحيح.</p>
         </div>
       </div>
     </section>

@@ -241,6 +241,24 @@ img {
   place-items: center;
 }
 
+.hero-visual img,
+.detail-hero-media img {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  border-radius: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.hero-visual img {
+  height: min(440px, 54vw);
+}
+
+.detail-hero-media img {
+  height: 260px;
+}
+
 .card-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
