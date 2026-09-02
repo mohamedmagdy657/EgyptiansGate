@@ -1,3 +1,21 @@
+const FAVORITES_STORAGE_KEY = 'egyptians-gate-saved-scholarships';
+
+function loadSavedScholarships() {
+  try {
+    const raw = localStorage.getItem(FAVORITES_STORAGE_KEY);
+    if (!raw) {
+      return [];
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) {
+      return [];
+    }
+    return parsed.filter(value => Number.isInteger(value));
+  } catch (error) {
+    return [];
+  }
+}
+
 const state = {
   page: 'home',
   param: undefined,
@@ -8,7 +26,7 @@ const state = {
     universities: [],
     countries: [],
   },
-  savedScholarships: [],
+  savedScholarships: loadSavedScholarships(),
 };
 
 function clearStaleDeploymentCaches() {
@@ -110,6 +128,7 @@ function resolveRoute() {
 }
 
 function renderPage() {
+  updateFavoritesNavCounter();
   highlightActiveLink();
   const pageContent = getPageContent(state.page, state.param);
   dom.app.innerHTML = pageContent;
@@ -131,6 +150,8 @@ function getPageContent(page, param) {
       return renderScholarshipsPage();
     case 'scholarship-detail':
       return renderScholarshipDetailPage(param);
+    case 'favorites':
+      return renderFavoritesPage();
     case 'universities':
       return renderUniversitiesPage();
     case 'university-detail':
@@ -219,9 +240,43 @@ function renderScholarshipsPage() {
         </div>
         <div id="scholarships-grid" class="card-grid">${SCHOLARSHIPS.map(renderScholarshipCard).join('')}</div>
         <div id="no-results" class="no-results hidden">
-          <p>No scholarships found.</p>
+          <p>لا توجد نتائج.</p>
           <div style="margin-top:1rem;"><button class="outline-button-sm" type="button" onclick="clearScholarshipFilters()">مسح البحث</button></div>
         </div>
+      </div>
+    </section>
+  `;
+}
+
+function renderFavoritesPage() {
+  const favorites = SCHOLARSHIPS.filter(item => state.savedScholarships.includes(item.id));
+
+  if (!favorites.length) {
+    return `
+      <section class="page-section">
+        <div class="container">
+          <div class="page-heading">
+            <div>
+              <h2 class="section-title">المنح المفضلة</h2>
+            </div>
+          </div>
+          <div class="no-results">
+            <p>لا توجد منح مفضلة حتى الآن.</p>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  return `
+    <section class="page-section">
+      <div class="container">
+        <div class="page-heading">
+          <div>
+            <h2 class="section-title">المنح المفضلة</h2>
+          </div>
+        </div>
+        <div class="card-grid">${favorites.map(renderFavoriteCard).join('')}</div>
       </div>
     </section>
   `;
@@ -296,7 +351,7 @@ function renderScholarshipDetailPage(id) {
             `).join('')}
           </div>
           <div class="card-actions" style="margin-top:1.5rem;">
-            <button class="primary-button" type="button" onclick="toggleSaveScholarship(${scholarship.id})">${state.savedScholarships.includes(scholarship.id) ? '✓ محفوظ' : 'حفظ المنحة'}</button>
+            ${renderSaveButton(scholarship.id, true)}
             <button class="outline-button-sm" type="button" onclick="toggleCompare('scholarships', ${scholarship.id})">إضافة للمقارنة</button>
           </div>
           ${scholarship.detailsHtml || ''}
@@ -543,8 +598,27 @@ function renderNotFound(message) {
   `;
 }
 
+function renderSaveButton(id, isDetail = false) {
+  const isSaved = state.savedScholarships.includes(id);
+  const baseButtonStyles = isDetail
+    ? 'padding: 0.9rem 1.15rem; min-width: 3.1rem; border-radius: 1rem; border: 1px solid #000; background: #fff; color: #fff; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size: 1.35rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center;'
+    : 'padding: 0.75rem 0.85rem; width: 2.75rem; height: 2.75rem; border-radius: 999px; border: 2px solid #000; background: #fff; color: #fff; text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000; font-size: 1.35rem; line-height: 1; display: inline-flex; align-items: center; justify-content: center;';
+  const activeStyles = isSaved
+    ? 'color: #dc2626; text-shadow: none; border-color: #dc2626; background: #fff;'
+    : '';
+
+  return `
+    <button
+      type="button"
+      aria-label="${isSaved ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}"
+      title="${isSaved ? 'إزالة من المفضلة' : 'إضافة إلى المفضلة'}"
+      style="${baseButtonStyles}${activeStyles}"
+      onclick="toggleSaveScholarship(${id})"
+    >${isSaved ? '❤️' : '♡'}</button>
+  `;
+}
+
 function renderScholarshipCard(item) {
-  const isSaved = state.savedScholarships.includes(item.id);
   const isCompared = state.compareItems.scholarships.includes(item.id);
   return `
     <article class="card fade-in">
@@ -557,8 +631,29 @@ function renderScholarshipCard(item) {
         </div>
         <div class="card-actions">
           <a class="outline-button-sm" href="#scholarship-detail/${item.id}">عرض التفاصيل</a>
-          <button class="outline-button-sm" type="button" onclick="toggleSaveScholarship(${item.id})">${isSaved ? '✓ محفوظ' : 'حفظ'}</button>
+          ${renderSaveButton(item.id)}
           <button class="outline-button-sm" type="button" onclick="toggleCompare('scholarships', ${item.id})">${isCompared ? '✓ مقارنة' : 'قارن'}</button>
+        </div>
+      </div>
+    </article>
+  `;
+}
+
+function renderFavoriteCard(item) {
+  return `
+    <article class="card fade-in">
+      <div class="card-body">
+        <h3 class="card-title">${item.name}</h3>
+        <div class="card-meta">
+          <span class="badge">${item.country}</span>
+          <span class="tag">${item.funding}</span>
+        </div>
+        <div class="card-meta" style="margin-top:0.75rem;">
+          <span class="tag">${item.deadline}</span>
+        </div>
+        <div class="card-actions" style="margin-top:1rem;">
+          <a class="outline-button-sm" href="#scholarship-detail/${item.id}">عرض التفاصيل</a>
+          <button class="outline-button-sm" type="button" onclick="toggleSaveScholarship(${item.id})">إزالة من المفضلة</button>
         </div>
       </div>
     </article>
@@ -820,6 +915,19 @@ function navigateTo(hash) {
   closeSearchOverlay();
 }
 
+function persistSavedScholarships() {
+  localStorage.setItem(FAVORITES_STORAGE_KEY, JSON.stringify(state.savedScholarships));
+}
+
+function updateFavoritesNavCounter() {
+  const navLink = document.querySelector('.nav-link[href="#favorites"]');
+  if (!navLink) {
+    return;
+  }
+  const count = state.savedScholarships.length;
+  navLink.textContent = count > 0 ? `المنح المفضلة (${count})` : 'المنح المفضلة';
+}
+
 function toggleSaveScholarship(id) {
   const index = state.savedScholarships.indexOf(id);
   if (index === -1) {
@@ -827,7 +935,9 @@ function toggleSaveScholarship(id) {
   } else {
     state.savedScholarships.splice(index, 1);
   }
-  if (state.page === 'scholarship-detail' || state.page === 'scholarships') {
+  persistSavedScholarships();
+  updateFavoritesNavCounter();
+  if (state.page === 'favorites' || state.page === 'scholarship-detail' || state.page === 'scholarships') {
     renderPage();
   }
 }
