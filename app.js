@@ -749,13 +749,29 @@ function renderFeatureCard(title, text) {
 function normalizeFilterValue(value) {
   return String(value || '')
     .replace(/\u00A0/g, ' ')
+    .replace(/[\u064B-\u065F\u0670]/g, '')
+    .replace(/[أإآ]/g, 'ا')
+    .replace(/ى/g, 'ي')
+    .replace(/ة/g, 'ة')
+    .replace(/[\u200C\u200D]/g, ' ')
+    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim()
     .toLowerCase();
 }
 
+function addSearchAliasSet(target, values) {
+  values.filter(Boolean).forEach(value => {
+    const normalized = normalizeFilterValue(value);
+    if (normalized) {
+      target.add(normalized);
+    }
+  });
+}
+
 function getScholarshipSearchText(item) {
-  const joined = [
+  const aliases = new Set();
+  const textFields = [
     item.name,
     item.country,
     item.degree,
@@ -773,17 +789,49 @@ function getScholarshipSearchText(item) {
     item.fundingDetails,
     item.languageReq,
     item.countryInfo,
-  ].filter(Boolean).join(' ');
+    item.officialLink,
+  ];
 
-  return normalizeFilterValue(joined);
+  addSearchAliasSet(aliases, textFields);
+
+  const combinedNameAndCountry = `${item.name || ''} ${item.country || ''}`.toLowerCase();
+  const combinedLower = combinedNameAndCountry;
+
+  if (/turkiye|turkey|تركيا|türkiye|turkiyeburslari/.test(combinedLower)) {
+    addSearchAliasSet(aliases, ['تركيا', 'تركيا الحكومية', 'Turkey', 'Turkiye', 'Türkiye', 'Türkiye Scholarships', 'Turkiye Burslari', 'Turkiye Scholarships']);
+  }
+
+  if (/mext|monbukagakusho|اليابان|japan/.test(combinedLower)) {
+    addSearchAliasSet(aliases, ['اليابان', 'Japan', 'MEXT', 'منحة اليابان', 'Monbukagakusho', 'منحة MEXT']);
+  }
+
+  if (/daad|ألمانيا|germany|المنح الألمانية/.test(combinedLower)) {
+    addSearchAliasSet(aliases, ['ألمانيا', 'Germany', 'DAAD', 'المنح الألمانية', 'German scholarships']);
+  }
+
+  if (/chevening|المملكة المتحدة|بريطانيا|uk|united kingdom/.test(combinedLower)) {
+    addSearchAliasSet(aliases, ['بريطانيا', 'المملكة المتحدة', 'UK', 'United Kingdom', 'Britain', 'Chevening', 'Chevening Scholarship']);
+  }
+
+  if (/ماجستير|master|masters|graduate/.test(combinedLower)) {
+    addSearchAliasSet(aliases, ['ماجستير', 'Master', 'Masters', 'Graduate degree']);
+  }
+
+  if (/دكتوراه|phd|doctorate|doctoral/.test(combinedLower)) {
+    addSearchAliasSet(aliases, ['دكتوراه', 'PhD', 'Doctorate', 'Doctoral']);
+  }
+
+  return Array.from(aliases).join(' ');
 }
 
 function filterScholarships(items, query = '') {
   const normalizedQuery = normalizeFilterValue(query);
 
-  return items.filter(item => {
-    return normalizedQuery === '' || getScholarshipSearchText(item).includes(normalizedQuery);
-  });
+  if (!normalizedQuery) {
+    return items;
+  }
+
+  return items.filter(item => getScholarshipSearchText(item).includes(normalizedQuery));
 }
 
 function bindPageEvents() {
