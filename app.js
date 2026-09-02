@@ -658,7 +658,6 @@ function renderScholarshipCard(item) {
     <article class="card fade-in">
       <div class="card-body">
         <h3 class="card-title">${item.name}</h3>
-        <p class="card-text">${item.desc}</p>
         <div class="card-meta">
           <span class="badge">${item.funding}</span>
           <span class="tag">${item.degree}</span>
