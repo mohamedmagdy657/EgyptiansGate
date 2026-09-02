@@ -11,6 +11,28 @@ const state = {
   savedScholarships: [],
 };
 
+function clearStaleDeploymentCaches() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then(registrations => {
+      registrations.forEach(registration => registration.unregister());
+    }).catch(() => {
+      // Ignore registration cleanup errors.
+    });
+  }
+
+  if ('caches' in window) {
+    caches.keys().then(keys => {
+      return Promise.all(keys
+        .filter(key => /^egate-cache-/i.test(key))
+        .map(key => caches.delete(key)));
+    }).catch(() => {
+      // Ignore cache cleanup errors.
+    });
+  }
+}
+
+window.addEventListener('load', clearStaleDeploymentCaches);
+
 const SECTION_IMAGES = {
   home: 'assets/images/hero-image.svg',
   scholarships: 'assets/images/section-scholarships.svg',
