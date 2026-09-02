@@ -489,6 +489,9 @@ function renderArticlesPage() {
       <div class="container">
         <div class="page-heading">
           <div>
+            <div style="margin-bottom:0.5rem; color: var(--muted); font-size:0.74rem; letter-spacing:0.04em; opacity:0.9;">
+              من بوابة المصريين • محمد مجدي
+            </div>
             <h2 class="section-title">المقالات</h2>
             <p class="section-description">تابع المقالات التي تساعدك في رحلة التقديم والدراسة بالخارج.</p>
           </div>
@@ -739,10 +742,6 @@ function renderArticleCard(item) {
       <div class="card-body">
         <span class="tag">${item.cat}</span>
         <h3 class="card-title">${item.title}</h3>
-        <div class="card-meta">
-          <span>${item.time}</span>
-        </div>
-        <p class="card-text">${item.author}</p>
         <a class="outline-button-sm" href="#article-detail/${item.id}">اقرأ المزيد</a>
       </div>
     </article>
