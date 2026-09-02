@@ -56,7 +56,7 @@ const SECTION_IMAGES = {
   scholarships: 'assets/images/section-scholarships.svg',
   universities: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=1200&q=80',
   countries: 'https://images.unsplash.com/photo-1514565131-fce0801e5785?auto=format&fit=crop&w=1200&q=80',
-  articles: 'assets/images/section-articles.svg',
+  articles: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1600&q=80',
   about: 'assets/images/section-about.svg',
 };
 
@@ -496,16 +496,6 @@ function renderArticlesPage() {
         <div class="full-width-card" style="margin:1.5rem 0; padding:0; overflow:hidden; border-radius:1.5rem;">
           <img src="${SECTION_IMAGES.articles}" alt="مقالات الدراسة بالخارج" loading="lazy" style="width:100%;display:block;object-fit:cover;max-height:320px;" />
         </div>
-        <div class="filter-row">
-          <input id="article-search" type="search" class="search-input" placeholder="ابحث في المقالات..." aria-label="بحث في المقالات">
-          <select id="article-cat" class="select-field" aria-label="فلترة حسب الفئة">
-            <option value="">كل التصنيفات</option>
-            <option value="دليل شامل">دليل شامل</option>
-            <option value="تأشيرات">تأشيرات</option>
-            <option value="اختبارات">اختبارات</option>
-            <option value="نصائح">نصائح</option>
-          </select>
-        </div>
         <div id="articles-grid" class="card-grid" style="margin-top:1.5rem;">${ARTICLES.map(renderArticleCard).join('')}</div>
       </div>
     </section>
@@ -525,7 +515,7 @@ function renderArticleDetailPage(id) {
         <div class="full-width-card" style="margin-top:1.5rem;">
           <span class="tag">${article.cat}</span>
           <h2 class="section-title" style="margin-top:1rem;">${article.title}</h2>
-          <p class="section-description">${article.author} • ${article.date} • ${article.time}</p>
+          <p class="section-description">${article.author} • ${article.time}</p>
           <div class="full-width-card" style="margin-top:1.5rem;">
             <h3>فهرس المحتوى</h3>
             <ul class="highlight-list">${article.toc.map(item => `<li>${item}</li>`).join('')}</ul>
@@ -750,7 +740,6 @@ function renderArticleCard(item) {
         <span class="tag">${item.cat}</span>
         <h3 class="card-title">${item.title}</h3>
         <div class="card-meta">
-          <span>${item.date}</span>
           <span>${item.time}</span>
         </div>
         <p class="card-text">${item.author}</p>
@@ -895,16 +884,6 @@ function bindPageEvents() {
     universitySearch.dataset.filterBound = 'true';
   }
 
-  const articleSearch = document.getElementById('article-search');
-  const articleCat = document.getElementById('article-cat');
-  if (articleSearch && !articleSearch.dataset.filterBound) {
-    articleSearch.addEventListener('input', handleArticleFilter);
-    articleSearch.dataset.filterBound = 'true';
-  }
-  if (articleCat && !articleCat.dataset.filterBound) {
-    articleCat.addEventListener('change', handleArticleFilter);
-    articleCat.dataset.filterBound = 'true';
-  }
 }
 
 function handleScholarshipFilter() {
@@ -941,17 +920,6 @@ function handleUniversitySearch() {
   const query = document.getElementById('university-search')?.value.trim().toLowerCase() || '';
   const results = UNIVERSITIES.filter(item => item.name.toLowerCase().includes(query) || item.country.toLowerCase().includes(query));
   document.getElementById('universities-grid').innerHTML = results.map(renderUniversityCard).join('');
-}
-
-function handleArticleFilter() {
-  const query = document.getElementById('article-search')?.value.trim().toLowerCase() || '';
-  const category = document.getElementById('article-cat')?.value || '';
-  const results = ARTICLES.filter(item => {
-    const matchesQuery = query === '' || item.title.toLowerCase().includes(query);
-    const matchesCategory = category === '' || item.cat === category;
-    return matchesQuery && matchesCategory;
-  });
-  document.getElementById('articles-grid').innerHTML = results.map(renderArticleCard).join('');
 }
 
 function openSearchOverlay() {
