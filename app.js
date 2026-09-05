@@ -64,7 +64,6 @@ const SCHOLARSHIP_DETAIL_IMAGES = {
   1: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?auto=format&fit=crop&w=1200&q=80',
   2: 'https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?auto=format&fit=crop&w=1200&q=80',
   3: 'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=1200&q=80',
-  4: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c8e?auto=format&fit=crop&w=1200&q=80',
 };
 
 const dom = {
