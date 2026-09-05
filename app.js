@@ -241,17 +241,7 @@ function renderScholarshipsPage() {
             <p class="section-description">اعثر على منح دراسية تدعم طموحك الأكاديمي.</p>
           </div>
         </div>
-        <div class="full-width-card">
-          <div class="filter-row">
-            <input id="scholarship-search" type="search" class="search-input" placeholder="ابحث عن منحة..." aria-label="بحث في المنح">
-            <button id="clear-scholarship-search" class="outline-button-sm" type="button">مسح البحث</button>
-          </div>
-        </div>
         <div id="scholarships-grid" class="card-grid">${SCHOLARSHIPS.map(renderScholarshipCard).join('')}</div>
-        <div id="no-results" class="no-results hidden">
-          <p>لا توجد نتائج.</p>
-          <div style="margin-top:1rem;"><button class="outline-button-sm" type="button" onclick="clearScholarshipFilters()">مسح البحث</button></div>
-        </div>
       </div>
     </section>
   `;
@@ -333,6 +323,14 @@ function renderScholarshipDetailPage(id) {
               <p><a href="${scholarship.officialLink}" target="_blank" rel="noopener noreferrer">زيارة الموقع</a></p>
             </div>
           </div>
+          ${scholarship.links && scholarship.links.length ? `
+            <div class="full-width-card" style="margin-top:1.5rem;">
+              <h3>روابط ذات صلة</h3>
+              <ul class="highlight-list">
+                ${scholarship.links.map(link => `<li><a href="${link.url}" target="_blank" rel="noopener noreferrer">${link.label}</a></li>`).join('')}
+              </ul>
+            </div>
+          ` : ''}
           <div class="vstack" style="margin-top:1.5rem;">
             <div class="full-width-card">
               <h3>المتطلبات الأساسية</h3>
@@ -774,144 +772,12 @@ function renderFeatureCard(title, text) {
   `;
 }
 
-function normalizeFilterValue(value) {
-  return String(value || '')
-    .replace(/\u00A0/g, ' ')
-    .replace(/[\u064B-\u065F\u0670]/g, '')
-    .replace(/[أإآ]/g, 'ا')
-    .replace(/ى/g, 'ي')
-    .replace(/ة/g, 'ة')
-    .replace(/[\u200C\u200D]/g, ' ')
-    .replace(/[^\p{L}\p{N}\s]/gu, ' ')
-    .replace(/\s+/g, ' ')
-    .trim()
-    .toLowerCase();
-}
-
-function addSearchAliasSet(target, values) {
-  values.filter(Boolean).forEach(value => {
-    const normalized = normalizeFilterValue(value);
-    if (normalized) {
-      target.add(normalized);
-    }
-  });
-}
-
-function getScholarshipSearchText(item) {
-  const aliases = new Set();
-  const textFields = [
-    item.name,
-    item.country,
-    item.degree,
-    item.funding,
-    item.desc,
-    item.deadline,
-    ...(item.programs || []),
-    ...(item.keywords || []),
-    ...(item.requirements || []),
-    ...(item.benefits || []),
-    ...(item.advantages || []),
-    ...(item.disadvantages || []),
-    ...(item.timeline || []),
-    ...(item.documents || []),
-    item.fundingDetails,
-    item.languageReq,
-    item.countryInfo,
-    item.officialLink,
-  ];
-
-  addSearchAliasSet(aliases, textFields);
-
-  const combinedNameAndCountry = `${item.name || ''} ${item.country || ''}`.toLowerCase();
-  const combinedLower = combinedNameAndCountry;
-
-  if (/turkiye|turkey|تركيا|türkiye|turkiyeburslari/.test(combinedLower)) {
-    addSearchAliasSet(aliases, ['تركيا', 'تركيا الحكومية', 'Turkey', 'Turkiye', 'Türkiye', 'Türkiye Scholarships', 'Turkiye Burslari', 'Turkiye Scholarships']);
-  }
-
-  if (/mext|monbukagakusho|اليابان|japan/.test(combinedLower)) {
-    addSearchAliasSet(aliases, ['اليابان', 'Japan', 'MEXT', 'منحة اليابان', 'Monbukagakusho', 'منحة MEXT']);
-  }
-
-  if (/daad|ألمانيا|germany|المنح الألمانية/.test(combinedLower)) {
-    addSearchAliasSet(aliases, ['ألمانيا', 'Germany', 'DAAD', 'المنح الألمانية', 'German scholarships']);
-  }
-
-  if (/chevening|المملكة المتحدة|بريطانيا|uk|united kingdom/.test(combinedLower)) {
-    addSearchAliasSet(aliases, ['بريطانيا', 'المملكة المتحدة', 'UK', 'United Kingdom', 'Britain', 'Chevening', 'Chevening Scholarship']);
-  }
-
-  if (/ماجستير|master|masters|graduate/.test(combinedLower)) {
-    addSearchAliasSet(aliases, ['ماجستير', 'Master', 'Masters', 'Graduate degree']);
-  }
-
-  if (/دكتوراه|phd|doctorate|doctoral/.test(combinedLower)) {
-    addSearchAliasSet(aliases, ['دكتوراه', 'PhD', 'Doctorate', 'Doctoral']);
-  }
-
-  return Array.from(aliases).join(' ');
-}
-
-function filterScholarships(items, query = '') {
-  const normalizedQuery = normalizeFilterValue(query);
-
-  if (!normalizedQuery) {
-    return items;
-  }
-
-  return items.filter(item => getScholarshipSearchText(item).includes(normalizedQuery));
-}
-
 function bindPageEvents() {
-  const searchInput = document.getElementById('scholarship-search');
-  const clearSearchButton = document.getElementById('clear-scholarship-search');
-
-  if (searchInput && !searchInput.dataset.filterBound) {
-    searchInput.addEventListener('input', handleScholarshipFilter);
-    searchInput.dataset.filterBound = 'true';
-  }
-
-  if (clearSearchButton && !clearSearchButton.dataset.filterBound) {
-    clearSearchButton.addEventListener('click', clearScholarshipFilters);
-    clearSearchButton.dataset.filterBound = 'true';
-  }
-
   const universitySearch = document.getElementById('university-search');
   if (universitySearch && !universitySearch.dataset.filterBound) {
     universitySearch.addEventListener('input', handleUniversitySearch);
     universitySearch.dataset.filterBound = 'true';
   }
-
-}
-
-function handleScholarshipFilter() {
-  const query = document.getElementById('scholarship-search')?.value || '';
-  const results = filterScholarships(SCHOLARSHIPS, query);
-
-  const grid = document.getElementById('scholarships-grid');
-  const noResults = document.getElementById('no-results');
-  if (!grid || !noResults) {
-    return;
-  }
-
-  try {
-    grid.innerHTML = results.map(renderScholarshipCard).join('');
-  } catch (err) {
-    console.error('Error rendering scholarship cards', err);
-    grid.innerHTML = '';
-  }
-
-  if (results.length > 0) {
-    noResults.classList.add('hidden');
-  } else {
-    noResults.classList.remove('hidden');
-  }
-}
-
-function clearScholarshipFilters() {
-  const searchInput = document.getElementById('scholarship-search');
-  if (searchInput) searchInput.value = '';
-  handleScholarshipFilter();
 }
 
 function handleUniversitySearch() {
