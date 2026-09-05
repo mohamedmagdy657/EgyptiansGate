@@ -181,7 +181,7 @@ function getPageContent(page, param) {
 }
 
 function renderHomePage() {
-  const featured = SCHOLARSHIPS.slice(0, 3);
+  const featured = SCHOLARSHIPS.filter(item => [24, 25, 26, 27].includes(item.id));
   return `
     <section class="page-section hero" id="home">
       <div class="container hero-inner">
@@ -291,7 +291,9 @@ function renderScholarshipDetailPage(id) {
   return `
     <section class="page-section">
       <div class="container">
-        <a class="secondary-button" href="#scholarships">← العودة إلى المنح</a>
+        <div class="scholarship-detail-back">
+          <a class="secondary-button" href="#scholarships">← العودة إلى المنح</a>
+        </div>
         <div class="full-width-card">
           ${detailImage ? `
             <div class="detail-hero-media" style="margin-bottom: 1.5rem;">

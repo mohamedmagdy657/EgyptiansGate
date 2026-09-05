@@ -427,6 +427,18 @@ img {
   align-items: center;
 }
 
+.scholarship-detail-back {
+  margin: 0 0 1rem;
+  display: block;
+}
+
+.scholarship-detail-back .secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
 .full-width-card {
   background: var(--surface-strong);
   border: 1px solid var(--border);
